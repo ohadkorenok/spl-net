@@ -4,10 +4,14 @@ import bgu.spl.net.api.bidi.Connections;
 
 import java.util.LinkedList;
 
-public abstract class Message<T> {
-    private Connections<T> connList;
+public abstract class Message {
+    Connections connections;
 
-    public void act(){};
+    public abstract void act();
 
-    public Message(LinkedList<byte[]> args){}
+    public Message() {
+    }
+
+    public abstract void init(LinkedList<byte[]> args);
+
 }
