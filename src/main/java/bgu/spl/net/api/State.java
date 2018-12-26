@@ -1,0 +1,4 @@
+package bgu.spl.net.api;
+
+public enum State {NULLSTATE, REGISTER, LOGIN, LOGOUT, FOLLOWUNFOLLOW, POST, PM, USERLIST, STAT, NOTIFICATION, ACK, ERROR}
+
