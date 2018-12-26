@@ -30,12 +30,15 @@ public class NotificationMessage extends Message {
 
     public byte[] encode() {
         LinkedList<Byte> byteLinkedList = new LinkedList<>();
-//        byte[] bytes = new byte[1 << 10];
         convertShortToByteAndPushToLinkedList(byteLinkedList, opCode);
         convertShortToByteAndPushToLinkedList(byteLinkedList, notificationType);
         convertStringToByteAndPushToLinkedList(byteLinkedList, postingUser);
         convertStringToByteAndPushToLinkedList(byteLinkedList, content);
-        byte[] bytes = byteLinkedList.toArray();
+        byte[] bytes = new byte[byteLinkedList.size()];
+        for(int i=0;i<byteLinkedList.size();i++){
+            bytes[i]=byteLinkedList.get(i);
+        }
+        return bytes;
     }
 
     private void convertShortToByteAndPushToLinkedList(LinkedList<Byte> byteLinkedList, short toConvert) {
@@ -46,6 +49,7 @@ public class NotificationMessage extends Message {
     }
 
     private void convertStringToByteAndPushToLinkedList(LinkedList<Byte> byteLinkedList, String toConvert) {
+        toConvert+="\'0'";
         byte[] temp = toConvert.getBytes(StandardCharsets.UTF_8); //TODO:: check for sure if the function adds '\0' to the byte array.
         for (int i = 0; i < temp.length; i++) {
             byteLinkedList.add(temp[i]);

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDecoder {
+public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDecoder<Message> {
 
     static HashMap<Short, Pair<Integer, Pair<State, Class<? extends Message>>>> opCodeToState = new HashMap<>();
 
@@ -40,7 +40,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     }
 
     @Override
-    public Object decodeNextByte(byte nextByte) {
+    public Message decodeNextByte(byte nextByte) {
         if (opCodeToState.isEmpty()) {
             init();
         }
@@ -93,7 +93,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     }
 
     @Override
-    public byte[] encode(Object message) {
+    public byte[] encode(Message message) {
         return new byte[0];
     }
 

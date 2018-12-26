@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 public abstract class Message {
     Connections connections;
+    enum type {ServerToClient,ClientToServer};
 
     public abstract void act();
 
