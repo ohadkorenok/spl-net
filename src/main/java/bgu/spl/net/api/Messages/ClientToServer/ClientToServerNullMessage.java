@@ -3,6 +3,7 @@ package bgu.spl.net.api.Messages.ClientToServer;
 import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
@@ -15,8 +16,9 @@ public class ClientToServerNullMessage extends ClientToServerMessage {
         System.out.println("NULL MESSAGE");
     }
 
+
     @Override
-    public ServerToClientMessage process() {
+    public ServerToClientMessage process(Database db) {
         return null;
     }
 }

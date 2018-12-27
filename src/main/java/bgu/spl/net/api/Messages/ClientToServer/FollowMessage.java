@@ -4,6 +4,7 @@ import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
+import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
@@ -33,8 +34,12 @@ public class FollowMessage extends ClientToServerMessage {
         }
     }
 
+
     @Override
-    public ServerToClientMessage process() {
+    public ServerToClientMessage process(Database db) {
         return null;
+    }
+    private boolean checkLogin(Database db){
+
     }
 }
