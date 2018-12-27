@@ -1,14 +1,17 @@
-package bgu.spl.net.api.Messages;
+package bgu.spl.net.api.Messages.ClientToServer;
 
-import bgu.spl.net.api.Message;
+import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 
 import java.util.LinkedList;
 
-public class PostMessage extends Message {
+public class PostMessage extends ClientToServerMessage {
     private static final int NUMBEROFARGS = 2;
     private static final short opCode = 5;
     private String content;
+    private final State state = State.POST;
+
 
     @Override
     public void act() {
@@ -16,7 +19,7 @@ public class PostMessage extends Message {
     }
 
     @Override
-    public void init(LinkedList<byte[]> args) {
+    public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- POST. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);
         } else {

@@ -1,16 +1,18 @@
-package bgu.spl.net.api.Messages;
+package bgu.spl.net.api.Messages.ClientToServer;
 
-import bgu.spl.net.api.Message;
+import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
-public class FollowMessage extends Message {
+public class FollowMessage extends ClientToServerMessage {
     private int NUMBEROFARGS;
     private short opCode = 4;
     private boolean isUnfollow = false;
     private LinkedList<String> usersToFollow = new LinkedList<>();
+    private final State state = State.FOLLOWUNFOLLOW;
+
 
     @Override
     public void act() {
@@ -18,7 +20,7 @@ public class FollowMessage extends Message {
     }
 
     @Override
-    public void init(LinkedList<byte[]> args) {
+    public void decode(LinkedList<byte[]> args) {
         if (MessageEncoderDecoder.bytesToShort(args.get(0)) != opCode) {
             System.out.println("Error in Follow/Unfollow -- opcode!!! got " + MessageEncoderDecoder.bytesToShort(args.get(0)) + " Expected " + opCode);
         }

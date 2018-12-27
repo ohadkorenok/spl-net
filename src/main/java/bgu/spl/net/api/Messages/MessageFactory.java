@@ -1,6 +1,6 @@
-package bgu.spl.net.api;
+package bgu.spl.net.api.Messages;
 
-import bgu.spl.net.api.Messages.NullMessage;
+import bgu.spl.net.api.Messages.ClientToServer.ClientToServerNullMessage;
 
 import java.util.LinkedList;
 
@@ -10,11 +10,11 @@ public class MessageFactory {
 
     }
 
-    public Message get(LinkedList<byte[]> args, Class<? extends Message> messageClass) {
-        Message m = new NullMessage();
+    public Message get(LinkedList<byte[]> args, Class<? extends ClientToServerMessage> messageClass) {
+        Message m = new ClientToServerNullMessage();
         try {
             m = messageClass.newInstance();
-            m.init(args);
+            m.decode(args);
             return m;
         } catch (IllegalAccessException e) {
             System.out.println("illegal accessException");

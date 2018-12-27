@@ -1,19 +1,21 @@
 package bgu.spl.net.impl.bidi;
 
-import bgu.spl.net.api.Message;
-import bgu.spl.net.api.Messages.*;
+import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.Message;
+import bgu.spl.net.api.Messages.ClientToServer.*;
+import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
+import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import javafx.util.Pair;
-import bgu.spl.net.api.MessageFactory;
+import bgu.spl.net.api.Messages.MessageFactory;
 
-import javax.management.Notification;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDecoder<Message> {
 
-    static HashMap<Short, Pair<Integer, Pair<State, Class<? extends Message>>>> opCodeToState = new HashMap<>();
+    static HashMap<Short, Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>>> opCodeToState = new HashMap<>();
 
     private byte bytes[] = new byte[1 << 10];
     private static int followCounter = 0;
@@ -24,8 +26,8 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     private int zeroBytesRemaining = 0;
     private boolean isGivenOpcode = false;
 
-    private void init() {
-        opCodeToState.put((short) 0, new Pair<>(-1, new Pair<>(State.NULLSTATE, NullMessage.class)));
+    public void init() {
+        opCodeToState.put((short) 0, new Pair<>(-1,new Pair<>(State.NULLSTATE, ClientToServerNullMessage.class)));
         opCodeToState.put((short) 1, new Pair<>(2, new Pair<>(State.REGISTER, RegisterMessage.class)));
         opCodeToState.put((short) 2, new Pair<>(2, new Pair<>(State.LOGIN, LoginMessage.class)));
         opCodeToState.put((short) 3, new Pair<>(0, new Pair<>(State.LOGOUT, LogoutMessage.class)));
@@ -34,9 +36,6 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         opCodeToState.put((short) 6, new Pair<>(2, new Pair<>(State.PM, PMessage.class)));
         opCodeToState.put((short) 7, new Pair<>(0, new Pair<>(State.USERLIST, UserListMessage.class)));
         opCodeToState.put((short) 8, new Pair<>(1, new Pair<>(State.STAT, StatMessage.class)));
-//        opCodeToState.put((short) 9, new Pair<>(-1,new Pair<>(State.FOLLOWUNFOLLOW, NotificationMessage.class)));
-//        opCodeToState.put((short) 10, new Pair<>(-1,new Pair<>(State.FOLLOWUNFOLLOW, FollowMessage.class)));
-//        opCodeToState.put((short) 11, new Pair<>(-1,new Pair<>(State.FOLLOWUNFOLLOW, FollowMessage.class)));
     }
 
     @Override
@@ -73,7 +72,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     }
 
     private Message createMessage() {
-        Class<? extends Message> messageClass = opCodeToState.get(opcode).getValue().getValue();
+        Class<? extends ClientToServerMessage> messageClass = opCodeToState.get(opcode).getValue().getValue();
         MessageFactory m = new MessageFactory();
         return m.get(args, messageClass);
     }
@@ -82,7 +81,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         if (counter == 2) {
             short opCode = bytesToShort(bytes);
             this.opcode = opCode;
-            Pair<Integer, Pair<State, Class<? extends Message>>> pair = opCodeToState.get(opCode);
+            Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>> pair = opCodeToState.get(opCode);
             state = pair.getValue().getKey();
             zeroBytesRemaining = pair.getKey();
             isGivenOpcode = true;
@@ -92,9 +91,22 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         }
     }
 
+    /**
+     * This method encodes a message, only if it throws
+     * @param message the message to encode
+     * @return byte[] message by bytes or null.
+     */
     @Override
     public byte[] encode(Message message) {
-        return new byte[0];
+        byte[] encodedMessage;
+        if (message instanceof ServerToClientMessage) {
+            encodedMessage = ((ServerToClientMessage) message).encode();
+        }
+        else{
+            System.out.println("Tried to encode a message that is a client to server message. The class of the message is:  "+message.getClass().getName().toString());
+            encodedMessage = new ServerToClientNullMessage().encode();
+        }
+        return encodedMessage;
     }
 
     public static short bytesToShort(byte[] byteArr) {
