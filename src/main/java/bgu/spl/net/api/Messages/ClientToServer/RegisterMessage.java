@@ -19,9 +19,9 @@ public class RegisterMessage extends ClientToServerMessage {
     private Database db;
 
     @Override
-    public Message process(Database database) {
+    public Message process() {
         Message message = new ClientToServerNullMessage();
-        boolean success = database.createUser(new User(userName, password));
+        boolean success = db.createUser(new User(userName, password));
         if(success){
             message = new AckMessage(opCode, new LinkedList<>());
         }

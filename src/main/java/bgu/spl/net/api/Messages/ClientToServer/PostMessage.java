@@ -1,6 +1,7 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 
@@ -10,6 +11,12 @@ public class PostMessage extends ClientToServerMessage {
     private static final int NUMBEROFARGS = 2;
     private static final short opCode = 5;
     private String content;
+
+    @Override
+    public ServerToClientMessage process() {
+        return null;
+    }
+
     private final State state = State.POST;
 
 

@@ -1,6 +1,7 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 
@@ -23,5 +24,10 @@ public class StatMessage extends ClientToServerMessage {
             }
             userName = new String(args.get(1));
         }
+    }
+
+    @Override
+    public ServerToClientMessage process() {
+        return null;
     }
 }
