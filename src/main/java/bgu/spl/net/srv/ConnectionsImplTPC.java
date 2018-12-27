@@ -9,7 +9,6 @@ public class ConnectionsImplTPC implements Connections {
 
     private static int idToInsert = 0;
     private HashMap<Integer, ConnectionHandler> activeClients = new HashMap<>();
-    private Database dB=new Database();
 
     public void pushHandler(BlockingConnectionHandler toPush){
         activeClients.put(idToInsert,toPush);

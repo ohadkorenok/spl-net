@@ -4,5 +4,5 @@ import bgu.spl.net.srv.Database;
 
 public abstract class ClientToServerMessage extends Message {
 
-    public abstract ServerToClientMessage process();
+    public abstract ServerToClientMessage process(Database db);
 }

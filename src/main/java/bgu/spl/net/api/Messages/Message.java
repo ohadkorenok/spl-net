@@ -11,7 +11,6 @@ import java.util.LinkedList;
 public abstract class Message {
     Connections connections;
     protected State state;
-    protected Database db = Database.getInstance();
 
     public Message() {
     }

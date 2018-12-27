@@ -4,6 +4,8 @@ import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
+import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
+import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.api.User;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
@@ -19,8 +21,9 @@ public class RegisterMessage extends ClientToServerMessage {
     private Database db;
 
     @Override
-    public Message process() {
-        Message message = new ClientToServerNullMessage();
+    public ServerToClientMessage process(Database db) {
+        this.db = db;
+        ServerToClientMessage message = new ServerToClientNullMessage();
         boolean success = db.createUser(new User(userName, password));
         if(success){
             message = new AckMessage(opCode, new LinkedList<>());

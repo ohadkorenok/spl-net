@@ -1,23 +1,29 @@
 package bgu.spl.net.impl.bidi;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
+import bgu.spl.net.srv.Database;
 
-public class BidiProtocol implements BidiMessagingProtocol {
+public class BidiProtocol<Message> implements BidiMessagingProtocol<Message> {
     private Connections connections;
+    private static Database db=new Database();
+    private int connectionId;
 
     @Override
     public void start(int connectionId, Connections connections) {
+        this.connections = connections;
+        this.connectionId = connectionId;
 
     }
 
     @Override
-    public void process(Object message) {
+    public void process(Message message) {
         if (message instanceof ClientToServerMessage){
-            ServerToClientMessage response = ((ClientToServerMessage) message).process();
-
+            ServerToClientMessage response = ((ClientToServerMessage) message).process(db);
+            connections.send(connectionId, response);
         }
     }
 
@@ -25,4 +31,6 @@ public class BidiProtocol implements BidiMessagingProtocol {
     public boolean shouldTerminate() {
         return false;
     }
+
+
 }

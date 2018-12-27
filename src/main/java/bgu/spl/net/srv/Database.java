@@ -41,10 +41,6 @@ public class Database {
         return users.getOrDefault(userName, null);
     }
 
-    public static Database getInstance(){
-        return SingleDatabase.db;
-    }
-
     //TODO:: finish update and delete.
 
 
