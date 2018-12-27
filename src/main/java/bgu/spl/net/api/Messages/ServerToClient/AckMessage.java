@@ -11,6 +11,9 @@ public class AckMessage extends ServerToClientMessage {
     private final short opCode = 10;
     private final State state = State.ACK;
 
+    public LinkedList<String> getArgs() {
+        return args;
+    }
 
     public AckMessage(short messageOpCode, LinkedList<String> args) {
         this.messageOpCode = messageOpCode;

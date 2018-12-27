@@ -35,6 +35,6 @@ public class FollowMessage extends ClientToServerMessage {
 
     @Override
     public ServerToClientMessage process() {
-        return null;
+
     }
 }

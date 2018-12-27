@@ -1,14 +1,23 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
-import bgu.spl.net.api.Messages.Message;
+import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
+import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.api.User;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
+import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
 public class LoginMessage extends ClientToServerMessage {
+    @Override
+    public ServerToClientMessage process(Database db, Connections connections, int  connectionId) {
+        User user = validateUser(db);
+        return db.createActiveUser(user, connectionId) ? new AckMessage(opCode, new LinkedList<>()) : new ErrorMessage(opCode);
+    }
 
     private static final int NUMBEROFARGS = 3;
     private static final short opCode = 2;
@@ -30,9 +39,16 @@ public class LoginMessage extends ClientToServerMessage {
         }
     }
 
-    @Override
-    public ServerToClientMessage process() {
-        return null;
+
+    private User validateUser(Database db){
+        User user = db.getUser(userName);
+        if(user!=null && password.equals(user.getPassword())){
+            return user;
+        }
+        else{
+            return null;
+        }
     }
+
 }
 

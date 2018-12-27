@@ -7,13 +7,12 @@ import bgu.spl.net.api.User;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
-    private static class SingleDatabase{
-        private static Database db = new Database();
-    }
 
     private ConcurrentHashMap<Integer, Message> messages = new ConcurrentHashMap<>();
     private static int messageId = 0;
     private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>(); // UserName, User.
+    private ConcurrentHashMap<Integer, User> activeUsers = new ConcurrentHashMap<>(); // UserName, User.
+
 
     public boolean createUser(User user) {
         synchronized (users) {
@@ -21,6 +20,18 @@ public class Database {
                 return false;
             } else {
                 users.putIfAbsent(user.getUserName(), user);
+                return true;
+            }
+        }
+    }
+
+
+    public boolean createActiveUser(User user, int connectionId) {
+        synchronized (users) {
+            if (activeUsers.containsKey(connectionId)) {
+                return false;
+            } else {
+                activeUsers.putIfAbsent(connectionId, user);
                 return true;
             }
         }
