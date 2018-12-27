@@ -15,11 +15,6 @@ public class FollowMessage extends ClientToServerMessage {
 
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList<byte[]> args) {
         if (MessageEncoderDecoder.bytesToShort(args.get(0)) != opCode) {
             System.out.println("Error in Follow/Unfollow -- opcode!!! got " + MessageEncoderDecoder.bytesToShort(args.get(0)) + " Expected " + opCode);

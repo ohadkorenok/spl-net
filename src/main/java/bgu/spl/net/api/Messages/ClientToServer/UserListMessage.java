@@ -12,11 +12,6 @@ public class UserListMessage extends ClientToServerMessage {
     private final State state = State.USERLIST;
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList <byte[]> args) {
 
         if (args.size() != NUMBEROFARGS) {

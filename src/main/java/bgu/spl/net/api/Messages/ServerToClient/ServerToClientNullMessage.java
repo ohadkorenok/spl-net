@@ -15,11 +15,6 @@ public class ServerToClientNullMessage extends ServerToClientMessage {
     }
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList<byte[]> args) {
 
     }

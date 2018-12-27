@@ -14,11 +14,6 @@ public class PostMessage extends ClientToServerMessage {
 
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- POST. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);

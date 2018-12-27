@@ -1,13 +1,12 @@
 package bgu.spl.net.api.Messages;
 
 import bgu.spl.net.api.Messages.ClientToServer.ClientToServerNullMessage;
+import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
 public class MessageFactory {
-
     public MessageFactory() {
-
     }
 
     public Message get(LinkedList<byte[]> args, Class<? extends ClientToServerMessage> messageClass) {

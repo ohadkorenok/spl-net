@@ -1,6 +1,7 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.State;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 
@@ -29,8 +30,8 @@ public class LoginMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void act() {
-
+    public Message process() {
+        return null;
     }
 }
 

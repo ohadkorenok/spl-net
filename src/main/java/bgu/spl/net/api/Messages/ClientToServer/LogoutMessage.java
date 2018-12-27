@@ -25,8 +25,4 @@ public class LogoutMessage extends ClientToServerMessage {
 
     }
 
-    @Override
-    public void act() {
-
-    }
 }

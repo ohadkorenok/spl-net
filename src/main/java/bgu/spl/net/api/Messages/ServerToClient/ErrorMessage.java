@@ -12,11 +12,6 @@ public class ErrorMessage extends ServerToClientMessage {
     private short errMessageOpcode;
     private final State state = State.ERROR;
 
-    @Override
-    public void act() {
-
-    }
-
     public ErrorMessage(short errMessageOpcode) {
         this.errMessageOpcode = errMessageOpcode;
     }

@@ -3,6 +3,7 @@ package bgu.spl.net.api.Messages;
 import bgu.spl.net.api.State;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
+import bgu.spl.net.srv.Database;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -10,9 +11,7 @@ import java.util.LinkedList;
 public abstract class Message {
     Connections connections;
     protected State state;
-
-
-    public abstract void act();
+    protected Database db = Database.getInstance();
 
     public Message() {
     }

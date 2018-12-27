@@ -7,6 +7,9 @@ import bgu.spl.net.api.User;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
+    private static class SingleDatabase{
+        private static Database db = new Database();
+    }
 
     private ConcurrentHashMap<Integer, Message> messages = new ConcurrentHashMap<>();
     private static int messageId = 0;
@@ -36,6 +39,10 @@ public class Database {
 
     public User getUser(String userName) {
         return users.getOrDefault(userName, null);
+    }
+
+    public static Database getInstance(){
+        return SingleDatabase.db;
     }
 
     //TODO:: finish update and delete.

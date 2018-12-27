@@ -14,11 +14,6 @@ public class StatMessage extends ClientToServerMessage {
 
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList <byte[]> args) {
         if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- STAT . got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);

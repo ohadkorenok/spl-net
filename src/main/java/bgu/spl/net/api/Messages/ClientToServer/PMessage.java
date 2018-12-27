@@ -14,11 +14,6 @@ public class PMessage extends ClientToServerMessage {
     private final State state = State.PM;
 
     @Override
-    public void act() {
-
-    }
-
-    @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- PM. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);

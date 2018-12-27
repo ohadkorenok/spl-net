@@ -16,6 +16,7 @@ public class RegisterMessage extends ClientToServerMessage {
     private static final short opCode = 1;
     private String userName;
     private String password;
+    private Database db;
 
     @Override
     public Message process(Database database) {
@@ -44,9 +45,5 @@ public class RegisterMessage extends ClientToServerMessage {
             userName = new String(args.get(1));
             password = new String(args.get(2));
         }
-    }
-    @Override
-    public void act() {
-
     }
 }
