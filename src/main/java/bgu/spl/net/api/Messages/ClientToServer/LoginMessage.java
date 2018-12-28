@@ -3,6 +3,7 @@ package bgu.spl.net.api.Messages.ClientToServer;
 import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
+import bgu.spl.net.api.Messages.ServerToClient.NotificationMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.api.User;
@@ -14,9 +15,24 @@ import java.util.LinkedList;
 
 public class LoginMessage extends ClientToServerMessage {
     @Override
-    public ServerToClientMessage process(Database db, Connections connections, int  connectionId) {
+    public ServerToClientMessage process(Database db, Connections connections, int connectionId) {
         User user = validateUser(db);
-        return db.createActiveUser(user, connectionId) ? new AckMessage(opCode, new LinkedList<>()) : new ErrorMessage(opCode);
+        if (user == null) {
+            return new ErrorMessage(opCode);
+        }
+        ServerToClientMessage messageToRecieve = db.createActiveUser(user, connectionId) ? new AckMessage(opCode, new LinkedList<>()) : new ErrorMessage(opCode);
+        if (!(messageToRecieve instanceof ErrorMessage)) {
+            user.setActiveConnectionId(connectionId);
+            user.setIsActive(true);
+            LinkedList<NotificationMessage> notificationMessages = user.getNotifications();
+            for (NotificationMessage notificationMessage :
+                    notificationMessages) {
+                if (connections.send(connectionId, notificationMessage)) {
+                    notificationMessages.remove(notificationMessage);
+                }
+            }
+        }
+        return messageToRecieve;
     }
 
     private static final int NUMBEROFARGS = 3;
@@ -40,12 +56,11 @@ public class LoginMessage extends ClientToServerMessage {
     }
 
 
-    private User validateUser(Database db){
+    private User validateUser(Database db) {
         User user = db.getUser(userName);
-        if(user!=null && password.equals(user.getPassword())){
+        if (user != null && password.equals(user.getPassword())) {
             return user;
-        }
-        else{
+        } else {
             return null;
         }
     }

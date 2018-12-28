@@ -1,5 +1,6 @@
 package bgu.spl.net.api;
 
+import bgu.spl.net.api.Messages.ServerToClient.NotificationMessage;
 import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
@@ -10,6 +11,8 @@ public class User {
     private boolean isActive = false;
     private LinkedList<User> following;
     private LinkedList<User> followers;
+    private LinkedList<NotificationMessage> notifications;
+    private int activeConnectionId;
 
 
     public User(String userName, String password, boolean isActive) {
@@ -17,6 +20,8 @@ public class User {
         this.password = password;
         this.isActive = isActive;
         this.following = new LinkedList<>();
+        this.followers = new LinkedList<>();
+        this.notifications = new LinkedList<>();
     }
 
     public String getUserName() {
@@ -72,4 +77,25 @@ public class User {
     public LinkedList<User> getFollowers() {
         return followers;
     }
+
+    public LinkedList<NotificationMessage> getNotifications() {
+        return notifications;
+    }
+
+    public void addNotification(NotificationMessage notification) {
+        this.notifications.add(notification);
+    }
+
+    public int getActiveConnectionId() {
+        return activeConnectionId;
+    }
+
+    public void setActiveConnectionId(int activeConnectionId) {
+        this.activeConnectionId = activeConnectionId;
+    }
+
+    public void setIsActive(boolean answer) {
+        isActive = answer;
+    }
+
 }

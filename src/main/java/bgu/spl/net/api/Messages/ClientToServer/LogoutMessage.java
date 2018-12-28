@@ -1,8 +1,11 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClient.AckLogout;
+import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.api.User;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
@@ -16,10 +19,9 @@ public class LogoutMessage extends ClientToServerMessage {
     private final State state = State.LOGOUT;
 
 
-
     @Override
     public void decode(LinkedList<byte[]> args) {
-        if(args.size() != NUMBEROFARGS){
+        if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- logout. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);
         }
         if (MessageEncoderDecoder.bytesToShort(args.get(0)) != opCode) {
@@ -31,6 +33,16 @@ public class LogoutMessage extends ClientToServerMessage {
 
     @Override
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
-        return null;
+        User user = fetchActiveUser(db, connectionId);
+        ServerToClientMessage serverToClientMessage;
+        if (user != null) {
+            db.removeActiveUser(connectionId);
+            user.setActiveConnectionId(-1);
+            user.setIsActive(false);
+            serverToClientMessage = new AckLogout();
+        } else {
+            serverToClientMessage = new ErrorMessage(opCode);
+        }
+        return serverToClientMessage;
     }
 }

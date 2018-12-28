@@ -18,6 +18,7 @@ public class FollowMessage extends ClientToServerMessage {
     private boolean isUnfollow = false;
     private LinkedList<String> usersToFollow = new LinkedList<>();
     private final State state = State.FOLLOWUNFOLLOW;
+//    private int timeStamp;
 
 
     @Override

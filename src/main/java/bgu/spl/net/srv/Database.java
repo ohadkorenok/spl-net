@@ -4,11 +4,12 @@ import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
 import bgu.spl.net.api.User;
 
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
 
-    private ConcurrentHashMap<Integer, Message> messages = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<User, LinkedList<Message>> messages = new ConcurrentHashMap<>();
     private static int messageId = 0;
     private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>(); // UserName, User.
     private ConcurrentHashMap<Integer, User> activeUsers = new ConcurrentHashMap<>(); // UserName, User.
@@ -37,23 +38,39 @@ public class Database {
         }
     }
 
-    public void createMessage(Message message) {
+    /**
+     * This method pushes the message into the desired message linked list of the user.
+     * @param user User
+     * @param message Message
+     */
+    public void createMessage(User user, Message message) {
         synchronized (messages) {
-            messages.putIfAbsent(messageId, message);
+            if(messages.containsKey(user)){
+                LinkedList<Message> messageList = messages.get(user);
+                messageList.add(message);
+            }
+            else{
+                LinkedList<Message> toPush = new LinkedList<>();
+                toPush.add(message);
+                messages.put(user, toPush);
+            }
             messageId++;
         }
     }
-    public User checkActiveUser(int connId){
-        if(activeUsers.containsKey(connId))
+
+    public User checkActiveUser(int connId) {
+        if (activeUsers.containsKey(connId))
             return activeUsers.get(connId);
         return null;
     }
-    public Message getMessage(int id) {
-        return messages.getOrDefault(id, new ServerToClientNullMessage());
-    }
+
 
     public User getUser(String userName) {
         return users.getOrDefault(userName, null);
+    }
+
+    public void removeActiveUser(int connectionId) {
+        activeUsers.remove(connectionId);
     }
 
     //TODO:: finish update and delete.

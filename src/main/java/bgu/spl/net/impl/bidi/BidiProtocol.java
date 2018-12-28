@@ -5,6 +5,7 @@ import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClient.AckLogout;
 import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
+import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.User;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
@@ -28,11 +29,13 @@ public class BidiProtocol<Message> implements BidiMessagingProtocol<Message> {
     @Override
     public void process(Message message) {
         boolean sendSucc=false;
-        if (message instanceof ClientToServerMessage){
+        if (message instanceof ClientToServerMessage) {
             ServerToClientMessage response = ((ClientToServerMessage) message).process(db, connections, connectionId);
-            sendSucc=connections.send(connectionId, response);
-            if((response instanceof AckLogout) && sendSucc){
-                isTerminated=true;
+            if (!(response instanceof ServerToClientNullMessage)) {
+                sendSucc = connections.send(connectionId, response);
+                if ((response instanceof AckLogout) && sendSucc) {
+                    isTerminated = true;
+                }
             }
         }
     }
