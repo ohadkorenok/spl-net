@@ -44,7 +44,7 @@ public class NotificationMessage extends ServerToClientMessage {
      * @param connections Connections
      * @param follower User target user.
      */
-    private static NotificationMessage handleNotification(short notificationType, User producer, String content, Connections connections, User follower) {
+    public static NotificationMessage handleNotification(short notificationType, User producer, String content, Connections connections, User follower) {
         NotificationMessage notificationMessage = new NotificationMessage(notificationType, producer.getUserName(), content);
         sendNotification(notificationMessage, connections, follower);
         return notificationMessage;
@@ -78,7 +78,7 @@ public class NotificationMessage extends ServerToClientMessage {
      * @param content String
      * @param connections Connections
      */
-    public static ServerToClientMessage sendNotificationsToRecipients(short notificationType, User producer, Set<User> recipients, String content, Connections connections) {
+    public static ServerToClientMessage handleNotificationToRecipients(short notificationType, User producer, Set<User> recipients, String content, Connections connections) {
         ServerToClientMessage notificationMessage = new ServerToClientNullMessage();
         for (User recipient :
                 recipients) {

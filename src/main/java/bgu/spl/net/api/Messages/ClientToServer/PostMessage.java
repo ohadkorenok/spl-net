@@ -11,7 +11,6 @@ import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
 
-import javax.management.Notification;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -49,7 +48,7 @@ public class PostMessage extends ClientToServerMessage {
             LinkedList<String> usersFromContent = extractUsersFromContent();
             Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
             recipients.addAll(user.getFollowers());
-            ServerToClientMessage message = NotificationMessage.sendNotificationsToRecipients(notificationType, user, recipients, content, connections);
+            ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
             db.createMessage(user, message);
             serverToClientMessage = new ServerToClientNullMessage();
         }
