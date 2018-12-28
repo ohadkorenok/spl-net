@@ -17,7 +17,14 @@ public class ConnectionsImplTPC implements Connections {
 
     @Override
     public boolean send(int connectionId, Object msg) {
-        return false;
+        ConnectionHandler connectionHandler = this.activeClients.getOrDefault(connectionId, null);
+        if(connectionHandler!=null){
+            connectionHandler.send(msg);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override

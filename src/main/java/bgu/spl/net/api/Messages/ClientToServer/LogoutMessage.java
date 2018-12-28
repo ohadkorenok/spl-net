@@ -3,7 +3,9 @@ package bgu.spl.net.api.Messages.ClientToServer;
 import bgu.spl.net.api.Messages.ClientToServerMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
+import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
@@ -26,8 +28,9 @@ public class LogoutMessage extends ClientToServerMessage {
 
     }
 
+
     @Override
-    public ServerToClientMessage process() {
+    public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
         return null;
     }
 }

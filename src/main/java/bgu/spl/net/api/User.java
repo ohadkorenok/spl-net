@@ -1,14 +1,18 @@
 package bgu.spl.net.api;
 
+import java.util.LinkedList;
+
 public class User {
     private String userName;
     private String password;
-    private boolean isActive;
+    private boolean isActive = false;
+    private LinkedList<String> myFollowList;
 
-    public User(String userName, String password){
+    public User(String userName, String password, boolean isActive){
         this.userName = userName;
         this.password = password;
-        this.isActive=false;
+        this.isActive = isActive;
+        this.myFollowList=new LinkedList<>();
     }
 
     public String getUserName() {
@@ -27,8 +31,22 @@ public class User {
         this.password = password;
     }
 
-    public boolean isActive(){return isActive;}
-    public void changeState(boolean state){this.isActive=state;}
+    public LinkedList<String> compareSetAndDifference(LinkedList<String> comparing, boolean isUnfollow){
+        LinkedList<String> difference=new LinkedList<String>();
+        for (String usertoFollow: comparing) {
+            if(!myFollowList.contains(usertoFollow) && !isUnfollow) {
+                myFollowList.add(usertoFollow);
+                difference.add(usertoFollow);
+            }
+            else if(myFollowList.contains(usertoFollow) && isUnfollow){
+                myFollowList.remove(usertoFollow);
+                difference.add(usertoFollow);
+            }
+
+        }
+        return difference;
+    }
+
 
 
 }

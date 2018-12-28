@@ -1,8 +1,12 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
+import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.api.User;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
 
@@ -34,12 +38,18 @@ public class FollowMessage extends ClientToServerMessage {
         }
     }
 
-
     @Override
-    public ServerToClientMessage process(Database db) {
-        return null;
+    public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
+        User user=ClientToServerNullMessage.checkLogStatus(db,connectionId);
+        if(user==null)
+            return new ErrorMessage(opCode);
+        else {
+                LinkedList<String> diff=user.compareSetAndDifference(usersToFollow,isUnfollow);
+                if(diff.size() == 0)
+                    return new ErrorMessage(opCode);
+                else
+                    return new AckMessage(opCode,diff);
+            }
+        }
     }
-    private boolean checkLogin(Database db){
 
-    }
-}

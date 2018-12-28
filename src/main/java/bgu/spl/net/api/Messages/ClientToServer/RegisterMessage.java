@@ -8,6 +8,7 @@ import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
 import bgu.spl.net.api.User;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
 
@@ -21,14 +22,13 @@ public class RegisterMessage extends ClientToServerMessage {
     private Database db;
 
     @Override
-    public ServerToClientMessage process(Database db) {
+    public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
         this.db = db;
         ServerToClientMessage message = new ServerToClientNullMessage();
-        boolean success = db.createUser(new User(userName, password));
-        if(success){
+        boolean success = db.createUser(new User(userName, password, false));
+        if (success) {
             message = new AckMessage(opCode, new LinkedList<>());
-        }
-        else{
+        } else {
             message = new ErrorMessage(opCode);
         }
         return message;
@@ -49,4 +49,5 @@ public class RegisterMessage extends ClientToServerMessage {
             password = new String(args.get(2));
         }
     }
+
 }
