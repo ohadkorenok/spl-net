@@ -31,6 +31,12 @@ public class User {
         this.password = password;
     }
 
+    /**
+     *
+     * @param comparing
+     * @param isUnfollow
+     * @return
+     */
     public LinkedList<String> compareSetAndDifference(LinkedList<String> comparing, boolean isUnfollow){
         LinkedList<String> difference=new LinkedList<String>();
         for (String usertoFollow: comparing) {

@@ -40,7 +40,7 @@ public class FollowMessage extends ClientToServerMessage {
 
     @Override
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
-        User user=ClientToServerNullMessage.checkLogStatus(db,connectionId);
+        User user=ClientToServerMessage.fetchUser(db,connectionId);
         if(user==null)
             return new ErrorMessage(opCode);
         else {
