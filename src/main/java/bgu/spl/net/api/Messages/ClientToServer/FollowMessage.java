@@ -39,6 +39,16 @@ public class FollowMessage extends ClientToServerMessage {
         }
     }
 
+    /**Comparing between the producer followingList and the usersToFollow list, if absent(in case of follow)
+     * or exist(in case of unfolllow) it will be added to difference list.
+     * Also, if the difference is empty, it will return ErrorMessage.
+     *
+     * @param db Database
+     * @param connection connections
+     * @param connectionId current ConnectionHandler id.
+     * @return Ack if successes or Error if difference.size is 0.
+     */
+
     @Override
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
         User user = ClientToServerMessage.fetchActiveUser(db, connectionId);

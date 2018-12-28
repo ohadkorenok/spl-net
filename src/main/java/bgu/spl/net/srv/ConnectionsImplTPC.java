@@ -1,11 +1,12 @@
 package bgu.spl.net.srv;
 
+import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.util.HashMap;
 
-public class ConnectionsImplTPC implements Connections {
+public class ConnectionsImplTPC implements Connections<Message> {
 
     private static int idToInsert = 0;
     private HashMap<Integer, ConnectionHandler> activeClients = new HashMap<>();
@@ -16,7 +17,7 @@ public class ConnectionsImplTPC implements Connections {
     }
 
     @Override
-    public boolean send(int connectionId, Object msg) {
+    public boolean send(int connectionId, Message msg) {
         ConnectionHandler connectionHandler = this.activeClients.getOrDefault(connectionId, null);
         if(connectionHandler!=null){
             connectionHandler.send(msg);
@@ -28,7 +29,7 @@ public class ConnectionsImplTPC implements Connections {
     }
 
     @Override
-    public void broadcast(Object msg) {
+    public void broadcast(Message msg) {
 
     }
 
