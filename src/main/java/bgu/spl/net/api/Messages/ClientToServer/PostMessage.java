@@ -1,6 +1,7 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClient.NotificationMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
@@ -48,9 +49,11 @@ public class PostMessage extends ClientToServerMessage {
             LinkedList<String> usersFromContent = extractUsersFromContent();
             Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
             recipients.addAll(user.getFollowers());
-            ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
-            db.createMessage(user, message);
-            serverToClientMessage = new ServerToClientNullMessage();
+            if(!recipients.isEmpty()) {
+                ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
+                db.createMessage(user, message);
+            }
+            serverToClientMessage = new AckMessage(opCode,new LinkedList<>());
         }
 
         return serverToClientMessage;

@@ -1,6 +1,7 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClient.NotificationMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
@@ -53,7 +54,7 @@ public class PMessage extends ClientToServerMessage {
         else{
             ServerToClientMessage msg=NotificationMessage.handleNotification(notificationType,producer,content,connections,db.getUser(userName));
             db.createMessage(producer,msg);
-            serverToClientMessage = new ServerToClientNullMessage();
+            serverToClientMessage = new AckMessage(opCode,new LinkedList<>());
         }
         return serverToClientMessage;
     }
