@@ -1,10 +1,18 @@
 package bgu.spl.net.api.Messages.ClientToServer;
 
 import bgu.spl.net.api.Messages.ClientToServerMessage;
+import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
+import bgu.spl.net.api.Messages.ServerToClient.ErrorMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.State;
+import bgu.spl.net.api.User;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
+import bgu.spl.net.srv.Database;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
 public class UserListMessage extends ClientToServerMessage {
@@ -13,7 +21,7 @@ public class UserListMessage extends ClientToServerMessage {
     private final State state = State.USERLIST;
 
     @Override
-    public void decode(LinkedList <byte[]> args) {
+    public void decode(LinkedList<byte[]> args) {
 
         if (args.size() != NUMBEROFARGS) {
             System.out.println("ERROR in decode -- USERLIST. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS);
@@ -26,7 +34,20 @@ public class UserListMessage extends ClientToServerMessage {
     }
 
     @Override
-    public ServerToClientMessage process() {
-        return null;
+    public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
+        User user = fetchActiveUser(db, connectionId);
+        if (user != null) {
+            LinkedList<String> userString = new LinkedList<>();
+            Collection<User> userEnumeration = db.getAllUsers();
+            Arrays.sort(userEnumeration.toArray());
+            for (User useri :
+                    userEnumeration) {
+                userString.add(useri.getUserName());
+            }
+            userString.addFirst(String.valueOf(userString.size()));
+            return new AckMessage(opCode, userString);
+        } else {
+            return new ErrorMessage(opCode);
+        }
     }
 }

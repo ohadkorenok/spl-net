@@ -5,7 +5,7 @@ import bgu.spl.net.srv.Database;
 
 import java.util.LinkedList;
 
-public class User {
+public class User implements Comparable{
     private String userName;
     private String password;
     private boolean isActive = false;
@@ -13,6 +13,8 @@ public class User {
     private LinkedList<User> followers;
     private LinkedList<NotificationMessage> notifications;
     private int activeConnectionId;
+    private static int totalIds = 0;
+    private int userId;
 
 
     public User(String userName, String password, boolean isActive) {
@@ -22,6 +24,8 @@ public class User {
         this.following = new LinkedList<>();
         this.followers = new LinkedList<>();
         this.notifications = new LinkedList<>();
+        this.userId = totalIds;
+        totalIds++;
     }
 
     public String getUserName() {
@@ -98,4 +102,17 @@ public class User {
         isActive = answer;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        if(!(o instanceof User)){
+            throw new IllegalArgumentException("Object not from user instance");
+        }
+        else{
+            return Integer.compare(userId, ((User) o).getUserId());
+        }
+    }
+
+    public int getUserId() {
+        return userId;
+    }
 }
