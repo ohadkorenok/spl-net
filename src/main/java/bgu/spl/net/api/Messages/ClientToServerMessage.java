@@ -14,7 +14,7 @@ public abstract class ClientToServerMessage extends Message {
      * @param connId
      * @return
      */
-    protected static User fetchUser(Database db, int connId){
+    protected static User fetchActiveUser(Database db, int connId){
         return db.checkActiveUser(connId);
     }
 }

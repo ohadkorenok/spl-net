@@ -1,18 +1,22 @@
 package bgu.spl.net.api;
 
+import bgu.spl.net.srv.Database;
+
 import java.util.LinkedList;
 
 public class User {
     private String userName;
     private String password;
     private boolean isActive = false;
-    private LinkedList<String> myFollowList;
+    private LinkedList<User> following;
+    private LinkedList<User> followers;
 
-    public User(String userName, String password, boolean isActive){
+
+    public User(String userName, String password, boolean isActive) {
         this.userName = userName;
         this.password = password;
         this.isActive = isActive;
-        this.myFollowList=new LinkedList<>();
+        this.following = new LinkedList<>();
     }
 
     public String getUserName() {
@@ -31,28 +35,41 @@ public class User {
         this.password = password;
     }
 
-    /**
-     *
-     * @param comparing
-     * @param isUnfollow
-     * @return
-     */
-    public LinkedList<String> compareSetAndDifference(LinkedList<String> comparing, boolean isUnfollow){
-        LinkedList<String> difference=new LinkedList<String>();
-        for (String usertoFollow: comparing) {
-            if(!myFollowList.contains(usertoFollow) && !isUnfollow) {
-                myFollowList.add(usertoFollow);
-                difference.add(usertoFollow);
-            }
-            else if(myFollowList.contains(usertoFollow) && isUnfollow){
-                myFollowList.remove(usertoFollow);
-                difference.add(usertoFollow);
-            }
 
+    public static LinkedList<String> userListToUserNameList(LinkedList<User> userList) {
+        LinkedList<String> linkedListToReturn = new LinkedList<>();
+        for (User user :
+                userList) {
+            linkedListToReturn.add(user.getUserName());
         }
-        return difference;
+        return linkedListToReturn;
     }
 
+    public void addFollowing(User userToFollow) {
+        following.add(userToFollow);
+    }
 
+    public void removeFollowing(User userToFollow) {
+        following.remove(userToFollow);
+    }
 
+    public void addFollower(User userToFollow) {
+        followers.add(userToFollow);
+    }
+
+    public void removeFollower(User userToFollow) {
+        followers.remove(userToFollow);
+    }
+
+    public LinkedList<User> getFollowing() {
+        return following;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public LinkedList<User> getFollowers() {
+        return followers;
+    }
 }

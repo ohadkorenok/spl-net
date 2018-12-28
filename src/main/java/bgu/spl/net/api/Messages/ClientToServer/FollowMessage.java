@@ -30,8 +30,8 @@ public class FollowMessage extends ClientToServerMessage {
             System.out.println("Error in follow/unfollow!!!! the arrays is smaller than 3");
         }
         NUMBEROFARGS = MessageEncoderDecoder.bytesToShort(args.get(2));
-        if (args.size() != NUMBEROFARGS+3) {
-            System.out.println("ERROR in decode -- logout. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS+3);
+        if (args.size() != NUMBEROFARGS + 3) {
+            System.out.println("ERROR in decode -- logout. got " + args.size() + " arguments !!! expected : " + NUMBEROFARGS + 3);
         }
         for (int i = 3; i < i + NUMBEROFARGS; i++) {
             usersToFollow.add(new String(args.get(i)));
@@ -40,16 +40,28 @@ public class FollowMessage extends ClientToServerMessage {
 
     @Override
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
-        User user=ClientToServerMessage.fetchUser(db,connectionId);
-        if(user==null)
+        User user = ClientToServerMessage.fetchActiveUser(db, connectionId);
+        if (user == null)
             return new ErrorMessage(opCode);
         else {
-                LinkedList<String> diff=user.compareSetAndDifference(usersToFollow,isUnfollow);
-                if(diff.size() == 0)
-                    return new ErrorMessage(opCode);
-                else
-                    return new AckMessage(opCode,diff);
+            LinkedList<String> difference = new LinkedList<>();
+
+            LinkedList<User> followingList = user.getFollowing();
+            LinkedList<String> followingString = User.userListToUserNameList(followingList);
+            for (String usertoFollow : usersToFollow) {
+                if (!followingString.contains(usertoFollow) && !isUnfollow) {
+                    followingList.add(db.getUser(usertoFollow));
+                    difference.add(usertoFollow);
+                } else if (followingString.contains(usertoFollow) && isUnfollow) {
+                    followingList.remove(db.getUser(usertoFollow));
+                    difference.add(usertoFollow);
+                }
             }
+            if (difference.size() == 0)
+                return new ErrorMessage(opCode);
+            else
+                return new AckMessage(opCode, difference);
         }
     }
+}
 
