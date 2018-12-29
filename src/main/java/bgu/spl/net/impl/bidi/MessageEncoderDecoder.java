@@ -26,6 +26,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     private int zeroBytesRemaining = 0;
     private boolean isGivenOpcode = false;
 
+    public MessageEncoderDecoder(){init();}
     public void init() {
         opCodeToState.put((short) 0, new Pair<>(-1,new Pair<>(State.NULLSTATE, ClientToServerNullMessage.class)));
         opCodeToState.put((short) 1, new Pair<>(2, new Pair<>(State.REGISTER, RegisterMessage.class)));
@@ -40,9 +41,6 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
 
     @Override
     public Message decodeNextByte(byte nextByte) {
-        if (opCodeToState.isEmpty()) {
-            init();
-        }
         pushByte(nextByte);
         processByOpCode();
         if (zeroBytesRemaining == 0 && isGivenOpcode) {

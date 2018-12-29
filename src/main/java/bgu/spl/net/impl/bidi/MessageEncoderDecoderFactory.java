@@ -6,7 +6,7 @@ public class MessageEncoderDecoderFactory implements Supplier {
     @Override
     public MessageEncoderDecoder get() {
         MessageEncoderDecoder toReturn = new MessageEncoderDecoder();
-        toReturn.init();
+//        toReturn.init();
         return toReturn;
     }
 }

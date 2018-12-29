@@ -36,9 +36,6 @@ public class LogoutMessage extends ClientToServerMessage {
         User user = fetchActiveUser(db, connectionId);
         ServerToClientMessage serverToClientMessage;
         if (user != null) {
-            db.removeActiveUser(connectionId);
-            user.setActiveConnectionId(-1);
-            user.setIsActive(false);
             serverToClientMessage = new AckLogout();
         } else {
             serverToClientMessage = new ErrorMessage(opCode);

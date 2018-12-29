@@ -22,6 +22,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
         if (connectionHandler != null && msg !=null) {
             connectionHandler.send(msg);
             return true;
+
         } else {
             return false;
         }
