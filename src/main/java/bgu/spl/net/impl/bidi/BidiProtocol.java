@@ -1,10 +1,7 @@
 package bgu.spl.net.impl.bidi;
 
-import bgu.spl.net.api.Messages.ClientToServer.LoginMessage;
 import bgu.spl.net.api.Messages.ClientToServerMessage;
-import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClient.AckLogout;
-import bgu.spl.net.api.Messages.ServerToClient.AckMessage;
 import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
 import bgu.spl.net.api.Messages.ServerToClientMessage;
 import bgu.spl.net.api.User;
