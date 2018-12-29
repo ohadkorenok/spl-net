@@ -64,7 +64,11 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
      * This method adds the bytes segment to the args array and initializes the segment (bytes array) .
      */
     private void updateArgs() {
-        args.add(bytes);
+        byte [] argByte = new byte[counter+1];
+        for (int i = 0; i < counter; i++) {
+        argByte[i] = bytes[i];
+        }
+        args.add(argByte);
         bytes = new byte[1 << 10];
         counter = 0;
     }
@@ -76,16 +80,14 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
     }
 
     private void processByOpCode() {
-        if (counter == 2) {
+        if (counter == 2 && !isGivenOpcode) {
             short opCode = bytesToShort(bytes);
             this.opcode = opCode;
-            Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>> pair = opCodeToState.get((short)opCode);
-            state = pair.getValue().getKey();
+                Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>> pair = opCodeToState.get((short)opCode);
+                state = pair.getValue().getKey();
             zeroBytesRemaining = pair.getKey();
             isGivenOpcode = true;
             updateArgs();
-            bytes = new byte[1 << 10];
-            counter = 0;
         }
     }
 
