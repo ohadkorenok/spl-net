@@ -73,7 +73,7 @@ public class FollowMessage extends ClientToServerMessage {
             if (difference.size() == 0)
                 return new ErrorMessage(opCode);
             else
-                return new AckMessage(opCode, difference);
+                return new AckMessage(opCode, difference,(short)difference.size());
         }
     }
 }
