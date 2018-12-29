@@ -79,7 +79,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         if (counter == 2) {
             short opCode = bytesToShort(bytes);
             this.opcode = opCode;
-            Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>> pair = opCodeToState.get(opCode);
+            Pair<Integer, Pair<State, Class<? extends ClientToServerMessage>>> pair = opCodeToState.get((short)opCode);
             state = pair.getValue().getKey();
             zeroBytesRemaining = pair.getKey();
             isGivenOpcode = true;
@@ -128,7 +128,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
      */
     private void pushByte(byte nextByte) {
 
-        if (nextByte != '\0') {
+        if (nextByte != '\0' || !isGivenOpcode) {
             if (counter >= bytes.length) {
                 bytes = Arrays.copyOf(bytes, counter * 2);
             }
