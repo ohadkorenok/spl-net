@@ -4,6 +4,8 @@ import bgu.spl.net.api.Messages.Message;
 import bgu.spl.net.api.Messages.ServerToClient.ServerToClientNullMessage;
 import bgu.spl.net.api.User;
 
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,6 +73,14 @@ public class Database {
 
     public void removeActiveUser(int connectionId) {
         activeUsers.remove(connectionId);
+    }
+
+    public Collection<User> getAllUsers(){
+        return users.values();
+    }
+
+    public LinkedList<Message> getMessagesOfUser(User user){
+        return messages.getOrDefault(user, new LinkedList<>());
     }
 
     //TODO:: finish update and delete.
