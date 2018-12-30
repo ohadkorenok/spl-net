@@ -5,11 +5,12 @@ import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionsImpl<T> implements Connections<T> {
 
     private static int idToInsert = 0;
-    private HashMap<Integer, ConnectionHandler<T>> activeClients = new HashMap<>();
+    private ConcurrentHashMap<Integer, ConnectionHandler<T>> activeClients = new ConcurrentHashMap<>();
 
     public void pushHandler(BlockingConnectionHandler<T> toPush) {
         activeClients.put(idToInsert, toPush);
@@ -41,6 +42,6 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
-
+        activeClients.remove(connectionId);
     }
 }

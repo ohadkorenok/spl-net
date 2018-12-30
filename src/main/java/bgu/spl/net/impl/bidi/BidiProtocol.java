@@ -45,6 +45,7 @@ public class BidiProtocol<Message> implements BidiMessagingProtocol<Message> {
             db.removeActiveUser(connectionId);
             user.setActiveConnectionId(-1);
             user.setIsActive(false);
+            connections.disconnect(connectionId);
         }
     }
 
