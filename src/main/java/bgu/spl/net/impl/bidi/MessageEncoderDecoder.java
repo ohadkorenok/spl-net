@@ -58,6 +58,8 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         args = new LinkedList<>();
         zeroBytesRemaining = 0;
         isGivenOpcode = false;
+        followCounter = 0;
+        state = State.NULLSTATE;
     }
 
     /**
@@ -130,7 +132,7 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
      */
     private void pushByte(byte nextByte) {
 
-        if (nextByte != '\0' || !isGivenOpcode) {
+        if (nextByte != '\0' || !isGivenOpcode || state == State.FOLLOWUNFOLLOW && followCounter < 4) {
             if (counter >= bytes.length) {
                 bytes = Arrays.copyOf(bytes, counter * 2);
             }
@@ -142,9 +144,9 @@ public class MessageEncoderDecoder implements bgu.spl.net.api.MessageEncoderDeco
         }
 
         if (state == State.FOLLOWUNFOLLOW) {
-            if (followCounter == 1) {
+            if (followCounter == 0) {
                 updateArgs();
-            } else if (followCounter == 3) {
+            } else if (followCounter == 2) {
                 zeroBytesRemaining = bytesToShort(bytes);
                 updateArgs();
             }
