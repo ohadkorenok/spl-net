@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class User implements Comparable{
     private String userName;
     private String password;
-    private boolean isActive = false;
+    private volatile boolean isActive = false;
     private LinkedList<User> following;
     private LinkedList<User> followers;
     private LinkedList<NotificationMessage> notifications;
@@ -95,7 +95,9 @@ public class User implements Comparable{
     }
 
     public void addNotification(NotificationMessage notification) {
-        this.notifications.add(notification);
+        synchronized(notification) {
+            this.notifications.add(notification);
+        }
     }
 
     public int getActiveConnectionId() {
