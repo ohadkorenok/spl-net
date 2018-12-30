@@ -44,8 +44,7 @@ public class UserListMessage extends ClientToServerMessage {
                     userEnumeration) {
                 userString.add(useri.getUserName());
             }
-            userString.addFirst(String.valueOf(userString.size()));
-            return new AckMessage(opCode, userString);
+            return new AckMessage(opCode, userString,(short)userString.size());
         } else {
             return new ErrorMessage(opCode);
         }

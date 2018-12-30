@@ -55,19 +55,27 @@ public class User implements Comparable{
     }
 
     public void addFollowing(User userToFollow) {
-        following.add(userToFollow);
+        synchronized (following) {
+            following.add(userToFollow);
+        }
     }
 
     public void removeFollowing(User userToFollow) {
-        following.remove(userToFollow);
+        synchronized (following) {
+            following.remove(userToFollow);
+        }
     }
 
     public void addFollower(User userToFollow) {
-        followers.add(userToFollow);
+        synchronized (followers) {
+            followers.add(userToFollow);
+        }
     }
 
     public void removeFollower(User userToFollow) {
-        followers.remove(userToFollow);
+        synchronized (followers) {
+            followers.remove(userToFollow);
+        }
     }
 
     public LinkedList<User> getFollowing() {

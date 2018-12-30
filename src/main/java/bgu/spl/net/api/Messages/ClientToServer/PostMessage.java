@@ -43,18 +43,20 @@ public class PostMessage extends ClientToServerMessage {
         ServerToClientMessage serverToClientMessage;
 
         User user = fetchActiveUser(db, connectionId);
-        if (user == null) {
-            serverToClientMessage = new ErrorMessage(opCode);
-        } else {
-            LinkedList<String> usersFromContent = extractUsersFromContent();
-            Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
-            recipients.addAll(user.getFollowers());
-            if(!recipients.isEmpty()) {
-                ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
-                db.createMessage(user, message);
+            if (user == null) {
+                serverToClientMessage = new ErrorMessage(opCode);
+            } else {
+                synchronized(user.getFollowers()) {
+                    LinkedList<String> usersFromContent = extractUsersFromContent();
+                    Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
+                    recipients.addAll(user.getFollowers());
+                    if (!recipients.isEmpty()) {
+                        ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
+                        db.createMessage(user, message);
+                    }
+                }
+                serverToClientMessage = new AckMessage(opCode, new LinkedList<>());
             }
-            serverToClientMessage = new AckMessage(opCode,new LinkedList<>());
-        }
 
         return serverToClientMessage;
     }

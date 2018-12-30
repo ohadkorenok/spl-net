@@ -36,7 +36,7 @@ public class LogoutMessage extends ClientToServerMessage {
         User user = fetchActiveUser(db, connectionId);
         ServerToClientMessage serverToClientMessage;
         if (user != null) {
-            serverToClientMessage = new AckLogout();
+            serverToClientMessage = new AckLogout(opCode);
         } else {
             serverToClientMessage = new ErrorMessage(opCode);
         }

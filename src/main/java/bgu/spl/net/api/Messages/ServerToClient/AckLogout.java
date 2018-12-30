@@ -10,6 +10,9 @@ public class AckLogout extends ServerToClientMessage {
     private final short opCode = 10;
     private final State state = State.ACK;
 
+    public AckLogout(short messageOpcode){
+        this.messageOpCode=messageOpcode;
+    }
     @Override
     public void decode(LinkedList<byte[]> args) {
     }

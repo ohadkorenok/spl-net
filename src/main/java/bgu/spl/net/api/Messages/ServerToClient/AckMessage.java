@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class AckMessage extends ServerToClientMessage {
     private short messageOpCode;
     private LinkedList<String> args;
+    private short numOfusers;
     private final short opCode = 10;
     private final State state = State.ACK;
 
@@ -18,6 +19,12 @@ public class AckMessage extends ServerToClientMessage {
     public AckMessage(short messageOpCode, LinkedList<String> args) {
         this.messageOpCode = messageOpCode;
         this.args = args;
+        numOfusers=-1;
+    }
+    public AckMessage(short messageOpCode, LinkedList<String> args,short numOfusers){
+        this.messageOpCode = messageOpCode;
+        this.args = args;
+        this.numOfusers=numOfusers;
     }
 
     @Override
@@ -34,6 +41,9 @@ public class AckMessage extends ServerToClientMessage {
         LinkedList<Byte> byteLinkedList = new LinkedList<>();
         this.convertShortToByteAndPushToLinkedList(byteLinkedList, opCode);
         this.convertShortToByteAndPushToLinkedList(byteLinkedList, messageOpCode);
+        if(numOfusers>-1){
+            this.convertShortToByteAndPushToLinkedList(byteLinkedList,numOfusers);
+        }
         for (String argument :
                 args) {
             this.convertStringToByteAndPushToLinkedList(byteLinkedList, argument);
