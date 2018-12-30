@@ -73,6 +73,7 @@ public class PostMessage extends ClientToServerMessage {
             }
             if (ch == ' ' && !userName.isEmpty() && listenChars) {
                 usersFromContent.add(userName);
+                userName = "";
                 listenChars = false;
             }
             if (listenChars) {
@@ -97,9 +98,15 @@ public class PostMessage extends ClientToServerMessage {
      */
     public static Set<User> stringUserNamesToUserSet(LinkedList<String> userNames, Database db) {
         Set<User> recipients = new HashSet<>();
+        User userFromUserString;
         for (String userString :
                 userNames) {
-            User userFromUserString = db.getUser(userString);
+            if(userString.length() > 1){
+            userFromUserString = db.getUser(userString.substring(1));
+            }
+            else{
+                userFromUserString = null;
+            }
             if (userFromUserString != null) {
                 recipients.add(userFromUserString);
             }
