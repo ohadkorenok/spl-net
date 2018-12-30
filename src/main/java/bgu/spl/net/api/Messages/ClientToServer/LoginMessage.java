@@ -27,10 +27,12 @@ public class LoginMessage extends ClientToServerMessage {
             LinkedList<NotificationMessage> notificationMessages = user.getNotifications();
             for (NotificationMessage notificationMessage :
                     notificationMessages) {
-                if (connections.send(connectionId, notificationMessage)) {
-                    notificationMessages.remove(notificationMessage);
+                if (!connections.send(connectionId, notificationMessage)) {
+                    System.out.println("connections.send() == false in LOGIN, for handling notifications.");
                 }
             }
+            notificationMessages.clear();
+
         }
         return messageToRecieve;
     }
