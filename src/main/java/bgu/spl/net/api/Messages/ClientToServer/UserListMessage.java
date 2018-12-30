@@ -37,14 +37,8 @@ public class UserListMessage extends ClientToServerMessage {
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
         User user = fetchActiveUser(db, connectionId);
         if (user != null) {
-            LinkedList<String> userString = new LinkedList<>();
-            Collection<User> userEnumeration = db.getAllUsers();
-            Arrays.sort(userEnumeration.toArray());
-            for (User useri :
-                    userEnumeration) {
-                userString.add(useri.getUserName());
-            }
-            return new AckMessage(opCode, userString,(short)userString.size());
+            LinkedList<String> userLinkedList = db.getAllUsers();
+            return new AckMessage(opCode, userLinkedList,(short)userLinkedList.size());
         } else {
             return new ErrorMessage(opCode);
         }

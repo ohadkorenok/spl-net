@@ -15,6 +15,7 @@ public class Database {
     private static int messageId = 0;
     private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>(); // UserName, User.
     private ConcurrentHashMap<Integer, User> activeUsers = new ConcurrentHashMap<>(); // UserName, User.
+    private LinkedList<String> userNamesByRegistration = new LinkedList<>();
 
 
     public boolean createUser(User user) {
@@ -22,8 +23,14 @@ public class Database {
             if (users.containsKey(user.getUserName())) {
                 return false;
             } else {
-                users.putIfAbsent(user.getUserName(), user);
-                return true;
+                if (users.putIfAbsent(user.getUserName(), user) == null) {
+                    synchronized (userNamesByRegistration) {
+                        userNamesByRegistration.add(user.getUserName());
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
@@ -42,16 +49,16 @@ public class Database {
 
     /**
      * This method pushes the message into the desired message linked list of the user.
-     * @param user User
+     *
+     * @param user    User
      * @param message Message
      */
     public void createMessage(User user, Message message) {
         synchronized (messages) {
-            if(messages.containsKey(user)){
+            if (messages.containsKey(user)) {
                 LinkedList<Message> messageList = messages.get(user);
                 messageList.add(message);
-            }
-            else{
+            } else {
                 LinkedList<Message> toPush = new LinkedList<>();
                 toPush.add(message);
                 messages.put(user, toPush);
@@ -75,11 +82,11 @@ public class Database {
         activeUsers.remove(connectionId);
     }
 
-    public Collection<User> getAllUsers(){
-        return users.values();
+    public LinkedList<String> getAllUsers() {
+        return userNamesByRegistration;
     }
 
-    public LinkedList<Message> getMessagesOfUser(User user){
+    public LinkedList<Message> getMessagesOfUser(User user) {
         return messages.getOrDefault(user, new LinkedList<>());
     }
 
