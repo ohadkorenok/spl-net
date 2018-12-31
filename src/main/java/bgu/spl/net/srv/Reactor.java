@@ -23,7 +23,7 @@ public class Reactor<T> implements Server<T> {
     private final Supplier<MessageEncoderDecoder<T>> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
-    private Connections<T> connections;
+    private ConnectionsImpl<T> connections;
 
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
@@ -55,7 +55,7 @@ public class Reactor<T> implements Server<T> {
             System.out.println("Server started");
 
             while (!Thread.currentThread().isInterrupted()) {
-
+                System.out.println("Reactor start");
                 selector.select();
                 runSelectionThreadTasks();
 
@@ -107,6 +107,7 @@ public class Reactor<T> implements Server<T> {
                 clientChan,
                 this,
                 connections);
+        connections.pushHandler(handler);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
     }
 

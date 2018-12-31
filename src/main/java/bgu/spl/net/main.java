@@ -10,6 +10,7 @@ public class main {
         MessageEncoderDecoderFactory encdecFac=new MessageEncoderDecoderFactory();
         ProtocolFactory protocolFactory=new ProtocolFactory();
         Server.threadPerClient(7777,protocolFactory,encdecFac).serve();
+//        Server.reactor(10,7777,protocolFactory,encdecFac).serve();
 //        MessageEncoderDecoderFactory factory = new MessageEncoderDecoderFactory();
 //        MessageEncoderDecoder mED = factory.get();
 //        AckMessage ackMessage = new AckMessage("login", (short)1, new LinkedList<String>());

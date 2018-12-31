@@ -10,6 +10,7 @@ import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class FollowMessage extends ClientToServerMessage {
@@ -22,11 +23,18 @@ public class FollowMessage extends ClientToServerMessage {
 
 
     @Override
+    public String toString() {
+        if(!isUnfollow)
+            return "FOLLOW " + 0 + " " + usersToFollow.size() + " " + usersToFollow;
+        else
+            return "FOLLOW " + 1 + " " + usersToFollow.size() + " " + usersToFollow;
+    }
+    @Override
     public void decode(LinkedList<byte[]> args) {
         if (MessageEncoderDecoder.bytesToShort(args.get(0)) != opCode) {
             System.out.println("Error in Follow/Unfollow -- opcode!!! got " + MessageEncoderDecoder.bytesToShort(args.get(0)) + " Expected " + opCode);
         }
-        isUnfollow = Integer.parseInt(new String(args.get(1))) == 1;
+        isUnfollow = args.get(1)[0] == 1;
         if (args.size() < 3) {
             System.out.println("Error in follow/unfollow!!!! the arrays is smaller than 3");
         }

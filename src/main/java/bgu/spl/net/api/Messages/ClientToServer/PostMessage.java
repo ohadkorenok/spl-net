@@ -25,7 +25,10 @@ public class PostMessage extends ClientToServerMessage {
 
     private final State state = State.POST;
 
-
+    @Override
+    public String toString() {
+        return ("POST " + content);
+    }
     @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {

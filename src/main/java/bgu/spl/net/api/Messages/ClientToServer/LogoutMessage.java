@@ -18,7 +18,10 @@ public class LogoutMessage extends ClientToServerMessage {
     private static final short opCode = 3;
     private final State state = State.LOGOUT;
 
-
+    @Override
+    public String toString() {
+        return "LOGOUT";
+    }
     @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {

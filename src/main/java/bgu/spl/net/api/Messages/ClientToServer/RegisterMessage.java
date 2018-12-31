@@ -21,6 +21,11 @@ public class RegisterMessage extends ClientToServerMessage {
     private String password;
     private Database db;
 
+
+    @Override
+    public String toString() {
+        return "REGISTER " + userName + " " + password;
+    }
     @Override
     public ServerToClientMessage process(Database db, Connections connection, int connectionId) {
         this.db = db;

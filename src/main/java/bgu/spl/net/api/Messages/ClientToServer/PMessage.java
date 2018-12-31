@@ -23,7 +23,10 @@ public class PMessage extends ClientToServerMessage {
 
 
     private final State state = State.PM;
-
+    @Override
+    public String toString() {
+        return "PM "+userName+" "+content;
+    }
     @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {

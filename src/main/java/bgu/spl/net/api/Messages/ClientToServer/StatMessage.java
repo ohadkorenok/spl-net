@@ -19,7 +19,10 @@ public class StatMessage extends ClientToServerMessage {
     private String userName;
     private final State state = State.STAT;
 
-
+    @Override
+    public String toString() {
+        return "STAT " + userName;
+    }
     @Override
     public void decode(LinkedList<byte[]> args) {
         if (args.size() != NUMBEROFARGS) {

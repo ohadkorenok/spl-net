@@ -12,7 +12,7 @@ public class ConnectionsImpl<T> implements Connections<T> {
     private static int idToInsert = 0;
     private ConcurrentHashMap<Integer, ConnectionHandler<T>> activeClients = new ConcurrentHashMap<>();
 
-    public void pushHandler(BlockingConnectionHandler<T> toPush) {
+    public void pushHandler(ConnectionHandler<T> toPush) {
         activeClients.put(idToInsert, toPush);
         idToInsert++;
     }

@@ -15,6 +15,10 @@ import java.util.LinkedList;
 
 public class LoginMessage extends ClientToServerMessage {
     @Override
+    public String toString() {
+        return "LOGIN " + userName + " " + password;
+    }
+    @Override
     public ServerToClientMessage process(Database db, Connections connections, int connectionId) {
         User user = validateUser(db);
         if (user == null) {
