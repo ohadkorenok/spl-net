@@ -83,7 +83,9 @@ public class Database {
     }
 
     public LinkedList<String> getAllUsers() {
-        return userNamesByRegistration;
+        synchronized (userNamesByRegistration) {
+            return userNamesByRegistration;
+        }
     }
 
     public LinkedList<Message> getMessagesOfUser(User user) {

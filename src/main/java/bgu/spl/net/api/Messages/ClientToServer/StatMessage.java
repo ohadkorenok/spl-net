@@ -46,8 +46,9 @@ public class StatMessage extends ClientToServerMessage {
         User user = fetchActiveUser(db, connectionId);
         int postsCounter = 0;
         LinkedList<Short> args = new LinkedList<>();
-        if (user != null) {
-            LinkedList<Message> messages = db.getMessagesOfUser(user);
+        User userForStats = db.getUser(userName);
+        if (user != null && userForStats!=null) {
+            LinkedList<Message> messages = db.getMessagesOfUser(userForStats);
             for (Message message :
                     messages) {
                 if (message instanceof PostMessage) {
@@ -55,8 +56,8 @@ public class StatMessage extends ClientToServerMessage {
                 }
             }
             args.addFirst((short)postsCounter);
-            args.add((short)user.getFollowers().size());
-            args.add((short)user.getFollowing().size());
+            args.add((short)userForStats.getFollowers().size());
+            args.add((short)userForStats.getFollowing().size());
 
             return new AckMessage(opCode, new LinkedList<>(),args);
         } else {

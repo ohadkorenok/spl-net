@@ -51,9 +51,9 @@ public class PostMessage extends ClientToServerMessage {
                     Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
                     recipients.addAll(user.getFollowers());
                     if (!recipients.isEmpty()) {
-                        ServerToClientMessage message = NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
-                        db.createMessage(user, message);
+                        NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
                     }
+                    db.createMessage(user, this);
                 }
                 serverToClientMessage = new AckMessage(opCode, new LinkedList<>());
             }
