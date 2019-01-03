@@ -11,10 +11,13 @@ import bgu.spl.net.srv.Database;
 
 public class BidiProtocol<Message> implements BidiMessagingProtocol<Message> {
     private Connections connections;
-    private static Database db=new Database();
+    private static Database db;
     private int connectionId;
     private boolean isTerminated;
 
+    public BidiProtocol(Database db){
+        this.db=db;
+    }
     @Override
     public void start(int connectionId, Connections connections) {
         this.connections = connections;
