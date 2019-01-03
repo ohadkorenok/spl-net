@@ -64,18 +64,18 @@ public class FollowMessage extends ClientToServerMessage {
             return new ErrorMessage(opCode);
         else {
             LinkedList<String> difference = new LinkedList<>();
-            LinkedList<User> followingList = user.getFollowing();
-            LinkedList<String> followingString = User.userListToUserNameList(followingList);
             for (String usertoFollow : usersToFollow) {
                 User userToFollowObj = db.getUser(usertoFollow);
-                if (!followingString.contains(usertoFollow) && !isUnfollow) {
-                    user.addFollowing(userToFollowObj);
-                    userToFollowObj.addFollower(user);
-                    difference.add(usertoFollow);
-                } else if (followingString.contains(usertoFollow) && isUnfollow) {
-                    user.removeFollowing(userToFollowObj);
-                    userToFollowObj.removeFollower(user);
-                    difference.add(usertoFollow);
+                if (!isUnfollow) {
+                    if(user.addFollowing(userToFollowObj)) {
+                        userToFollowObj.addFollower(user);
+                        difference.add(usertoFollow);
+                    }
+                } else{
+                    if(user.removeFollowing(userToFollowObj)) {
+                        userToFollowObj.removeFollower(user);
+                        difference.add(usertoFollow);
+                    }
                 }
             }
             if (difference.size() == 0)

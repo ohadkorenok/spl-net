@@ -54,15 +54,19 @@ public class User implements Comparable{
         return linkedListToReturn;
     }
 
-    public void addFollowing(User userToFollow) {
+    public boolean addFollowing(User userToFollow) {
         synchronized (following) {
-            following.add(userToFollow);
+            if(!following.contains(userToFollow)) {
+                following.add(userToFollow);
+                return true;
+            }
+            return false;
         }
     }
 
-    public void removeFollowing(User userToFollow) {
+    public boolean removeFollowing(User userToFollow) {
         synchronized (following) {
-            following.remove(userToFollow);
+               return following.remove(userToFollow);
         }
     }
 
