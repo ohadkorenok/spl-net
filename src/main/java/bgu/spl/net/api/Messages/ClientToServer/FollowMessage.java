@@ -69,11 +69,11 @@ public class FollowMessage extends ClientToServerMessage {
             for (String usertoFollow : usersToFollow) {
                 User userToFollowObj = db.getUser(usertoFollow);
                 if (!followingString.contains(usertoFollow) && !isUnfollow) {
-                    followingList.add(userToFollowObj);
+                    user.addFollowing(userToFollowObj);
                     userToFollowObj.addFollower(user);
                     difference.add(usertoFollow);
                 } else if (followingString.contains(usertoFollow) && isUnfollow) {
-                    followingList.remove(userToFollowObj);
+                    user.removeFollowing(userToFollowObj);
                     userToFollowObj.removeFollower(user);
                     difference.add(usertoFollow);
                 }
