@@ -12,6 +12,7 @@ public class NotificationMessage extends ServerToClientMessage {
 
     private final short opCode = 9;
     private short notificationType;
+    private byte type;
     private String postingUser;
     private String content;
     private final State state = State.NOTIFICATION;
@@ -23,6 +24,10 @@ public class NotificationMessage extends ServerToClientMessage {
 
     public NotificationMessage(short notificationType, String postingUser, String content) {
         this.notificationType = notificationType;
+        if(notificationType==0)
+            type=0;
+        else if(notificationType==1)
+            type=1;
         this.postingUser = postingUser;
         this.content = content;
     }
@@ -30,7 +35,8 @@ public class NotificationMessage extends ServerToClientMessage {
     public byte[] encode() {
         LinkedList<Byte> byteLinkedList = new LinkedList<>();
         convertShortToByteAndPushToLinkedList(byteLinkedList, opCode);
-        convertShortToByteAndPushToLinkedList(byteLinkedList, notificationType);
+//        convertShortToByteAndPushToLinkedList(byteLinkedList, notificationType);
+        byteLinkedList.add(type);
         convertStringToByteAndPushToLinkedList(byteLinkedList, postingUser);
         convertStringToByteAndPushToLinkedList(byteLinkedList, content);
         return fromByteLinkedListToByteArray(byteLinkedList);
