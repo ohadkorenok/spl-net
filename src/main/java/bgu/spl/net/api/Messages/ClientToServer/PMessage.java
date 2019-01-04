@@ -20,8 +20,12 @@ public class PMessage extends ClientToServerMessage {
     private static final short notificationType = 0;
     private String content;
     private String userName;
+    private int messageId;
 
 
+    public int getMessageId(){
+        return messageId;
+    }
     private final State state = State.PM;
     @Override
     public String toString() {
@@ -37,6 +41,7 @@ public class PMessage extends ClientToServerMessage {
             }
             userName= new String(args.get(1));
             content = new String(args.get(2));
+            messageId = getNextMessageId();
         }
     }
 
@@ -55,7 +60,7 @@ public class PMessage extends ClientToServerMessage {
         if(producer==null)
             serverToClientMessage= new ErrorMessage(opCode);
         else{
-            ServerToClientMessage msg=NotificationMessage.handleNotification(notificationType,producer,content,connections,db.getUser(userName));
+            ServerToClientMessage msg=NotificationMessage.handleNotification(notificationType,producer,content,connections,db.getUser(userName), getMessageId());
             db.createMessage(producer,msg);
             serverToClientMessage = new AckMessage(opCode,new LinkedList<>());
         }

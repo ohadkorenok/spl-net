@@ -11,6 +11,7 @@ import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.bidi.MessageEncoderDecoder;
 import bgu.spl.net.srv.Database;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class StatMessage extends ClientToServerMessage {

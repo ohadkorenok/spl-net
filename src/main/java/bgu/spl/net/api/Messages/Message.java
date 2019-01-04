@@ -7,18 +7,23 @@ import bgu.spl.net.srv.Database;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Message {
     Connections connections;
     protected State state;
+    private static AtomicInteger messageId = new AtomicInteger(0);
 
     public Message() {
     }
 
     public abstract void decode(LinkedList<byte[]> args);
 
+    protected static int getNextMessageId(){
+        return messageId.incrementAndGet();
+    }
 
-    //TODO:: ADD WALLS AFTER EACH WORD!!!!!
+
     protected void convertShortToByteAndPushToLinkedList(LinkedList<Byte> byteLinkedList, short toConvert) {
         byte[] temp = MessageEncoderDecoder.shortToBytes(toConvert);
         for (int i = 0; i < temp.length; i++) {
@@ -26,9 +31,7 @@ public abstract class Message {
         }
     }
 
-    //TODO:: ADD WALLS AFTER EACH WORD!!!!!
     protected void convertStringToByteAndPushToLinkedList(LinkedList<Byte> byteLinkedList, String toConvert) {
-//        toConvert += '\0';
         byte[] temp = toConvert.getBytes(StandardCharsets.UTF_8); //TODO:: check for sure if the function adds '\0' to the byte array.
         for (int i = 0; i < temp.length; i++) {
             byteLinkedList.add(temp[i]);
@@ -37,7 +40,6 @@ public abstract class Message {
         byteLinkedList.add(zeroByte);
     }
 
-    //TODO:: ADD WALLS AFTER EACH WORD!!!!!
     protected byte[] fromByteLinkedListToByteArray(LinkedList<Byte> byteLinkedList) {
         byte[] bytes = new byte[byteLinkedList.size()];
         for (int i = 0; i < byteLinkedList.size(); i++) {

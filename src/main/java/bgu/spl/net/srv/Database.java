@@ -92,7 +92,5 @@ public class Database {
         return messages.getOrDefault(user, new LinkedList<>());
     }
 
-    //TODO:: finish update and delete.
-
 
 }

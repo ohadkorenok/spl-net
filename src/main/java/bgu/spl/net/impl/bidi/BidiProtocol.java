@@ -35,8 +35,6 @@ public class BidiProtocol<Message> implements BidiMessagingProtocol<Message> {
                 sendSucc = connections.send(connectionId, response);
                 if ((response instanceof AckLogout) && sendSucc) {
                         handleLogout();
-                    // TODO: what happens if I successed to push part of the bytes to my buffer, it returns true.
-                    // TODO: add flag when we finished to put.
                     isTerminated = true;
                 }
             }

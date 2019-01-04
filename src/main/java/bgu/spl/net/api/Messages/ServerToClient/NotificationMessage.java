@@ -8,7 +8,7 @@ import bgu.spl.net.api.bidi.Connections;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class NotificationMessage extends ServerToClientMessage {
+public class NotificationMessage extends ServerToClientMessage implements Comparable {
 
     private final short opCode = 9;
     private short notificationType;
@@ -16,13 +16,18 @@ public class NotificationMessage extends ServerToClientMessage {
     private String postingUser;
     private String content;
     private final State state = State.NOTIFICATION;
+    private final int messageId;
 
 
     @Override
     public void decode(LinkedList<byte[]> args) {
     }
 
-    public NotificationMessage(short notificationType, String postingUser, String content) {
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public NotificationMessage(short notificationType, String postingUser, String content, int messageId) {
         this.notificationType = notificationType;
         if(notificationType==0)
             type=0;
@@ -30,12 +35,12 @@ public class NotificationMessage extends ServerToClientMessage {
             type=1;
         this.postingUser = postingUser;
         this.content = content;
+        this.messageId = messageId;
     }
 
     public byte[] encode() {
         LinkedList<Byte> byteLinkedList = new LinkedList<>();
         convertShortToByteAndPushToLinkedList(byteLinkedList, opCode);
-//        convertShortToByteAndPushToLinkedList(byteLinkedList, notificationType);
         byteLinkedList.add(type);
         convertStringToByteAndPushToLinkedList(byteLinkedList, postingUser);
         convertStringToByteAndPushToLinkedList(byteLinkedList, content);
@@ -50,8 +55,8 @@ public class NotificationMessage extends ServerToClientMessage {
      * @param connections Connections
      * @param follower User target user.
      */
-    public static NotificationMessage handleNotification(short notificationType, User producer, String content, Connections connections, User follower) {
-        NotificationMessage notificationMessage = new NotificationMessage(notificationType, producer.getUserName(), content);
+    public static NotificationMessage handleNotification(short notificationType, User producer, String content, Connections connections, User follower, int messageId) {
+        NotificationMessage notificationMessage = new NotificationMessage(notificationType, producer.getUserName(), content, messageId);
         sendNotification(notificationMessage, connections, follower);
         return notificationMessage;
     }
@@ -84,13 +89,23 @@ public class NotificationMessage extends ServerToClientMessage {
      * @param content String
      * @param connections Connections
      */
-    public static ServerToClientMessage handleNotificationToRecipients(short notificationType, User producer, Set<User> recipients, String content, Connections connections) {
+    public static ServerToClientMessage handleNotificationToRecipients(short notificationType, User producer, Set<User> recipients, String content, Connections connections, int messageId) {
         ServerToClientMessage notificationMessage = new ServerToClientNullMessage();
         for (User recipient :
                 recipients) {
-            notificationMessage = handleNotification(notificationType, producer, content, connections, recipient);
+            notificationMessage = handleNotification(notificationType, producer, content, connections, recipient, messageId);
         }
         return notificationMessage;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        if(!(o instanceof NotificationMessage)){
+            throw new IllegalArgumentException("Error! these objects are not comparable! got "+o.getClass().getName()+"  class");
+        }
+        else{
+            int otherMessageId = ((NotificationMessage) o).getMessageId();
+            return   messageId - otherMessageId;
+        }
+    }
 }

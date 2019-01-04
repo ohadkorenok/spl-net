@@ -21,9 +21,14 @@ public class PostMessage extends ClientToServerMessage {
     private static final short opCode = 5;
     private String content;
     private static final short notificationType = 1;
+    private int messageId;
 
 
     private final State state = State.POST;
+
+    public int getMessageId(){
+        return messageId;
+    }
 
     @Override
     public String toString() {
@@ -38,6 +43,7 @@ public class PostMessage extends ClientToServerMessage {
                 System.out.println("Error in POST -- opcode!!! got " + MessageEncoderDecoder.bytesToShort(args.get(0)) + " Expected " + opCode);
             }
             content = new String(args.get(1));
+            messageId = getNextMessageId();
         }
     }
 
@@ -54,7 +60,7 @@ public class PostMessage extends ClientToServerMessage {
                     Set<User> recipients = stringUserNamesToUserSet(usersFromContent, db);
                     recipients.addAll(user.getFollowers());
                     if (!recipients.isEmpty()) {
-                        NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections);
+                        NotificationMessage.handleNotificationToRecipients(notificationType, user, recipients, content, connections, getNextMessageId());
                     }
                     db.createMessage(user, this);
                 }
